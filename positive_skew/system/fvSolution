@@ -1,0 +1,132 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    p
+    {
+        solver           GAMG;
+        tolerance        1e-6;
+        relTol           0.01;
+
+        smoother         DICGaussSeidel;
+
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 10;
+        agglomerator     faceAreaPair;
+        mergeLevels      1;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
+
+    p_rgh
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-6;
+        relTol          0.01;
+    }
+
+    p_rghFinal
+    {
+        $p_rgh;
+        relTol          0;
+    }
+   /* "(U|k|epsilon|epo)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-05;
+        relTol          0.1;
+    }*/
+
+    "(U|T)"
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-06;
+        relTol          0;
+    }
+
+    "(U|T)Final"
+    {
+        $U;
+        relTol          0;
+    }
+
+   epo
+    {
+        solver          GAMG;
+        tolerance       1e-06;
+        relTol          0.1;
+        smoother        GaussSeidel;
+        nPreSweeps      0;
+        nPostSweeps     2;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 10;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
+    }
+
+    "(epo)Final"
+    {
+        $epo;
+        relTol          0;
+    }
+
+}
+
+PIMPLE
+{
+    nOuterCorrectors    2;
+    nNonOrthogonalCorrectors 2;
+    nCorrectors         2;
+	pRefCell	0;
+	pRefValue  0;
+}
+
+BPISO
+{
+    nCorrectors     2;
+}
+
+epoPISO
+{
+    nCorrectors     2;
+	epoRefCell 0;
+	epoRefValue 0;
+}
+
+relaxationFactors
+{
+    fields
+    {
+    p         0.3;
+    epo       0.3;
+    T	       0.3;
+    }
+    equations
+    {
+        "U.*"           0.5;
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    note        "OpenFOAM to Fluent interface control dictionary";
+    class       dictionary;
+    object      foamDataToFluentDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+p               1;
+U               2;
+epo		3;
+j		4;
+liftDir		5;
+dragDir		6;
+//pMean		7;
+//TMean		8;
+
+// ************************************************************************* //
